@@ -33,12 +33,12 @@ TestApp_Products is a Swift-based application designed to manage and display pro
  
 ## Unit Tests
  The project includes comprehensive unit tests for ProductsUseCases to ensure proper functionality in various scenarios.
-## Unit Tests
- Open the project in Xcode.
- Select the Test scheme.
- Press Command + U to run all tests.
+
+  1. Open the project in Xcode.
+  2. Select the Test scheme.
+  3. Press Command + U to run all tests.
                                                 
-##Author
+## Author
  Mohammad Usman Ansari
  Created on April 20, 2025
 

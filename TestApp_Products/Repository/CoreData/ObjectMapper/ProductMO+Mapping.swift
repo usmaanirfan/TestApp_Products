@@ -16,7 +16,15 @@ extension ProductMO {
 
 extension Product {
     func toEntity(in context: NSManagedObjectContext) -> ProductMO {
-        let entity: ProductMO = .init(context: context)
+        let entity: ProductMO
+        let request: NSFetchRequest = ProductMO.fetchRequest()
+        request.predicate = NSPredicate(format: "id = %d", id)
+        let results = try? context.fetch(request)
+        if results?.count == 0 {
+             entity = .init(context: context)
+        } else {
+            entity = results?.first ?? .init(context: context)
+        }
         entity.id = Int64(id)
         entity.title = title
         entity.productDescription = description

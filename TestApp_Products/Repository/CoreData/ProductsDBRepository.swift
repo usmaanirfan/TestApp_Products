@@ -48,6 +48,7 @@ actor ProductsDBRepository : ProductsCachable {
     
     /// store Products into core data .
     func store(products: Products) async throws {
+        try await deleteProducts()
         let context = coreDataStorage.container.viewContext
         try await context.perform {
             _ = products.toEntity(in: context)
@@ -55,8 +56,32 @@ actor ProductsDBRepository : ProductsCachable {
         }
     }
     
+    /// Delete Products from core data .
+    private func deleteProducts() async throws {
+        let context = coreDataStorage.container.viewContext
+        let requestProducts: NSFetchRequest = ProductsMO.fetchRequest()
+        try await context.perform {
+            let products = try context.fetch(requestProducts)
+            products.forEach { context.delete($0) }
+            try context.save()
+        }
+    }
+    
+    /// Delete ProductDetail from core data .
+    private func deleteProductDetail(id : Int) async throws {
+        let context = coreDataStorage.container.viewContext
+        let requestProductDetail: NSFetchRequest = ProductDetailMO.fetchRequest()
+        requestProductDetail.predicate = NSPredicate(format: "id = %d",id)
+        try await context.perform {
+            let products = try context.fetch(requestProductDetail)
+            products.forEach { context.delete($0) }
+            try context.save()
+        }
+    }
+    
     /// store ProductDetail into core data .
     func store(productDetail: ProductDetail) async throws {
+        try await deleteProductDetail(id: productDetail.id)
         let context = coreDataStorage.container.viewContext
         try await context.perform {
             _ = productDetail.toEntity(in: context)

@@ -19,7 +19,14 @@ extension ProductsMO {
 
 extension Products {
     func toEntity(in context: NSManagedObjectContext) -> ProductsMO {
-        let entity: ProductsMO = .init(context: context)
+        let entity: ProductsMO
+        let request: NSFetchRequest = ProductsMO.fetchRequest()
+        let results = try? context.fetch(request)
+        if results?.count == 0 {
+             entity = .init(context: context)
+        } else {
+            entity = results?.first ?? .init(context: context)
+        }
         entity.total = Int64(total)
         entity.skip = Int64(total)
         entity.limit = Int64(limit)

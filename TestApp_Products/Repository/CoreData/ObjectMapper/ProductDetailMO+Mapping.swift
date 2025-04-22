@@ -25,7 +25,15 @@ extension ProductDetailMO {
 
 extension ProductDetail {
     func toEntity(in context: NSManagedObjectContext) -> ProductDetailMO {
-        let entity: ProductDetailMO = .init(context: context)
+        let entity: ProductDetailMO
+        let request: NSFetchRequest = ProductDetailMO.fetchRequest()
+        request.predicate = NSPredicate(format: "id = %d", id)
+        let results = try? context.fetch(request)
+        if results?.count == 0 {
+             entity = .init(context: context)
+        } else {
+            entity = results?.first ?? .init(context: context)
+        }
         entity.id = Int64(id)
         entity.title = title
         entity.productDescription = description
